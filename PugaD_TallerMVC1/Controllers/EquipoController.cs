@@ -7,26 +7,16 @@ namespace PugaD_TallerMVC1.Controllers
 {
     public class EquipoController : Controller
     {
-        public EquipoRepository _repository;
-        public EquipoController()
-        {
-            _repository = new EquipoRepository();
-        }
-        public ActionResult View()
-        {
-            return View();
-        }
+        private static EquipoRepository _repository = new EquipoRepository();
+
         public ActionResult List()
         {
-            var equipos = _repository.DevuelveListadoEquipos();
-            equipos = equipos.OrderBy(item => item.PartidosGanados);
+            var equipos = _repository.DevuelveListadoEquipos()
+                                     .OrderBy(e => e.PartidosGanados)
+                                     .ToList();
             return View(equipos);
         }
 
-        public ActionResult Create()
-        {
-            return View();
-        }
         public ActionResult Edit(int Id)
         {
             var equipo = _repository.DevuelveEquipoPorId(Id);
@@ -38,13 +28,12 @@ namespace PugaD_TallerMVC1.Controllers
         {
             try
             {
-                //Proceso guardar 
                 _repository.ActualizarEquipo(Id, equipo);
                 return RedirectToAction(nameof(List));
             }
             catch
             {
-                return View();
+                return View(equipo);
             }
         }
     }
